@@ -50,6 +50,8 @@ async function createWhatsAppConnection() {
                     options: {},
                 });
 
+                // console.log(!!msg.message?.videoMessage);
+
                 await sock.sendMessage(
                     msg.key.remoteJid as string,
                     {
