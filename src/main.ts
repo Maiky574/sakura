@@ -41,6 +41,8 @@ async function createWhatsAppConnection() {
     sock.ev.on("messages.upsert", async (props) => {
         const msg = props.messages[0];
 
+        console.log(msg);
+
         if (groups.includes(msg.key.remoteJid as string)) {
             if (
                 msg.message?.imageMessage?.caption == "/s" ||
