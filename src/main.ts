@@ -40,25 +40,32 @@ async function createWhatsAppConnection() {
     sock.ev.on("creds.update", saveCreds);
 
     sock.ev.on("messages.upsert", async (props) => {
-        const msg = props.messages[0];
+        try {
+            const msg = props.messages[0];
 
-        if (groups.includes(msg.key.remoteJid as string)) {
-            if (
-                msg.message?.imageMessage?.caption == "/s" ||
-                msg.message?.videoMessage?.caption == "/s"
-            ) {
-                const media = await downloadMediaMessage(msg, "buffer", {
-                    options: {},
-                });
+            if (groups.includes(msg.key.remoteJid as string)) {
+                if (
+                    msg.message?.imageMessage?.caption == "/s" ||
+                    msg.message?.videoMessage?.caption == "/s"
+                ) {
+                    const media = await downloadMediaMessage(msg, "buffer", {
+                        options: {},
+                    });
 
-                await sock.sendMessage(
-                    msg.key.remoteJid as string,
-                    {
-                        sticker: media,
-                    },
-                    { quoted: msg, ephemeralExpiration: WA_DEFAULT_EPHEMERAL }
-                );
+                    await sock.sendMessage(
+                        msg.key.remoteJid as string,
+                        {
+                            sticker: media,
+                        },
+                        {
+                            quoted: msg,
+                            ephemeralExpiration: WA_DEFAULT_EPHEMERAL,
+                        }
+                    );
+                }
             }
+        } catch (error) {
+            console.log(error);
         }
     });
 }
