@@ -7,7 +7,7 @@ import makeWASocket, {
     WA_DEFAULT_EPHEMERAL,
 } from "@whiskeysockets/baileys";
 
-import pino from "pino";
+// import pino from "pino";
 
 const groups = ["120363317058483225@g.us"];
 
@@ -20,7 +20,7 @@ async function createWhatsAppConnection() {
         printQRInTerminal: true,
         auth: state,
         shouldIgnoreJid: (jid) => isJidBroadcast(jid),
-        logger: pino({ level: "silent" }),
+        // logger: pino({ level: "silent" }),
         generateHighQualityLinkPreview: true,
     });
 
@@ -31,7 +31,7 @@ async function createWhatsAppConnection() {
                 (lastDisconnect?.error as Boom)?.output?.statusCode !==
                 DisconnectReason.loggedOut;
             if (shouldReconnect) {
-                this.createWhatsAppConnection();
+                createWhatsAppConnection();
             } else {
                 console.log("connection error sending alert email");
             }
@@ -50,8 +50,6 @@ async function createWhatsAppConnection() {
                 const media = await downloadMediaMessage(msg, "buffer", {
                     options: {},
                 });
-
-                // console.log(!!msg.message?.videoMessage);
 
                 await sock.sendMessage(
                     msg.key.remoteJid as string,
