@@ -4,6 +4,7 @@ import makeWASocket, {
     isJidBroadcast,
     DisconnectReason,
     downloadMediaMessage,
+    WA_DEFAULT_EPHEMERAL,
 } from "@whiskeysockets/baileys";
 
 import pino from "pino";
@@ -41,8 +42,6 @@ async function createWhatsAppConnection() {
     sock.ev.on("messages.upsert", async (props) => {
         const msg = props.messages[0];
 
-        console.log(msg);
-
         if (groups.includes(msg.key.remoteJid as string)) {
             if (
                 msg.message?.imageMessage?.caption == "/s" ||
@@ -59,7 +58,7 @@ async function createWhatsAppConnection() {
                     {
                         sticker: media,
                     },
-                    { quoted: msg }
+                    { quoted: msg, ephemeralExpiration: WA_DEFAULT_EPHEMERAL }
                 );
             }
         }
